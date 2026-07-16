@@ -1,17 +1,18 @@
 from flask import Flask, request, jsonify
-import logging
 
 app = Flask(__name__)
 
-logging.basicConfig(level=logging.INFO)
-
 @app.route("/", methods=["GET", "POST"])
 def handle_request():
+
+    print("Method:", request.method)
+    print("Headers:", dict(request.headers))
+    print("Content-Type:", request.content_type)
+    print("Content-Length:", request.content_length)
+    print("Raw Body:", request.get_data(as_text=True))
+
     if request.method == "GET":
         return "Bot is running!", 200
-
-    app.logger.info("Headers: %s", dict(request.headers))
-    app.logger.info("Body: %s", request.get_data(as_text=True))
 
     return jsonify({
         "text": "Hello from Render!"
