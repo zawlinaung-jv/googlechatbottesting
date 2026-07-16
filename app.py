@@ -4,28 +4,29 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def handle_request():
-    payload = request.get_json(silent=True) # JSON ကို အမှားမပါအောင် ဖတ်ပါ
+    # Render ၏ Health Check အတွက် GET ကို စစ်ဆေးခြင်း
+    if request.method == 'GET':
+        return "Bot is running!", 200
+        
+    # Google Chat မှ ပို့သော POST Request များကို ကိုင်တွယ်ခြင်း
+    payload = request.get_json(silent=True)
     
-    # Payload မရှိရင် Error မတက်အောင် စစ်ပါ
     if not payload:
-        return jsonify({"text": "Hello, I am running!"})
-    
+        return jsonify({"text": "No payload received"})
+        
     event_type = payload.get('type')
     
     if event_type == 'MESSAGE':
-        message_data = payload.get('message', {})
-        user_text = message_data.get('text', '')
-        
+        user_text = payload.get('message', {}).get('text', '')
         return jsonify({
-            "text": f"Hello! သင်ပြောတာကို ကျွန်တော်လက်ခံရရှိပါပြီ: {user_text}"
+            "text": f"လက်ခံရရှိပါပြီ: {user_text}"
         })
     
     elif event_type == 'ADDED_TO_SPACE':
         return jsonify({
-            "text": "မင်္ဂလာပါ! ကျွန်တော်နဲ့ စကားပြောဖို့ အဆင်သင့်ဖြစ်ပါပြီ။"
+            "text": "မင်္ဂလာပါ! စကားပြောဖို့ အဆင်သင့်ဖြစ်ပါပြီ။"
         })
     
-    return jsonify({"text": "Hello, I am your bot!"})
+    return jsonify({"text": "Hello!"})
 
-# if __name__ == '__main__': အပိုင်းကို ဖယ်လိုက်ပါ
-# Gunicorn က Dockerfile ထဲက CMD အတိုင်း သူ့ဟာသူ ခေါ်ယူသွားပါလိမ့်မယ်။
+# app.run(...) လိုင်းကို ဖယ်ထုတ်ထားပါ

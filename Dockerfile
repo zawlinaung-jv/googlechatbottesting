@@ -9,5 +9,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # ကုဒ်များအားလုံးကို Container ထဲ ကူးထည့်ခြင်း
 COPY . .
 
-# Flask application ကို gunicorn ဖြင့် run ပါ (app:app ဆိုသည်မှာ app.py ဖိုင်ထဲမှ app object ကို ဆိုလိုသည်)
+# Bot ကို Gunicorn ဖြင့် Run ပါ (Port 10000 ကို Render အတွက် အသုံးပြုပါ)
 CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]
